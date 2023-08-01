@@ -12,5 +12,6 @@
 
     <modules>
         <module>spring-boot-helloworld</module>
+		<module>spring-boot-jdbc-tutorial</module>
     </modules>
 </project>

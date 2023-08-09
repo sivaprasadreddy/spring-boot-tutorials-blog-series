@@ -33,7 +33,7 @@ public class BookmarkRepository {
         String sql = "select id, title, url, created_at from bookmarks where id = ?";
         try {
             Bookmark bookmark = jdbcTemplate.queryForObject(sql, INSTANCE, id);
-            return Optional.of(bookmark);
+            return Optional.ofNullable(bookmark);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

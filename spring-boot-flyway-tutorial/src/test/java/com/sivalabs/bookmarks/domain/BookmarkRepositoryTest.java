@@ -1,10 +1,8 @@
 package com.sivalabs.bookmarks.domain;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.Instant;
@@ -13,7 +11,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@JdbcTest(properties = {
+@DataJpaTest(properties = {
    "spring.test.database.replace=none",
    "spring.datasource.url=jdbc:tc:postgresql:15.2-alpine:///db"
 })
@@ -21,14 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BookmarkRepositoryTest {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
-
     BookmarkRepository bookmarkRepository;
-
-    @BeforeEach
-    void setUp() {
-        bookmarkRepository = new BookmarkRepository(jdbcTemplate);
-    }
 
     @Test
     void shouldFindAllBookmarks() {
@@ -40,16 +31,16 @@ class BookmarkRepositoryTest {
     @Test
     void shouldCreateBookmark() {
         Bookmark bookmark = new Bookmark(null, "My Title", "https://sivalabs.in", Instant.now());
-        Long id = bookmarkRepository.save(bookmark);
-        assertThat(id).isNotNull();
+        Bookmark savedBookmark = bookmarkRepository.save(bookmark);
+        assertThat(savedBookmark).isNotNull();
     }
 
     @Test
     void shouldGetBookmarkById() {
         Bookmark bookmark = new Bookmark(null, "My Title", "https://sivalabs.in", Instant.now());
-        Long id = bookmarkRepository.save(bookmark);
+        Bookmark savedBookmark = bookmarkRepository.save(bookmark);
 
-        Optional<Bookmark> bookmarkOptional = bookmarkRepository.findById(id);
+        Optional<Bookmark> bookmarkOptional = bookmarkRepository.findById(savedBookmark.getId());
         assertThat(bookmarkOptional).isPresent();
     }
 
@@ -62,22 +53,23 @@ class BookmarkRepositoryTest {
     @Test
     void shouldUpdateBookmark() {
         Bookmark bookmark = new Bookmark(null, "My Title", "https://sivalabs.in", Instant.now());
-        Long id = bookmarkRepository.save(bookmark);
+        Bookmark savedBookmark = bookmarkRepository.save(bookmark);
 
-        Bookmark updatedBookmark = new Bookmark(id, "My Updated Title", "https://www.sivalabs.in", bookmark.createdAt());
-        bookmarkRepository.update(updatedBookmark);
+        savedBookmark.setTitle("My Updated Title");
+        savedBookmark.setUrl("https://www.sivalabs.in");
+        bookmarkRepository.save(savedBookmark);
 
-        updatedBookmark = bookmarkRepository.findById(id).orElseThrow();
-        assertThat(updatedBookmark.id()).isEqualTo(id);
-        assertThat(updatedBookmark.title()).isEqualTo("My Updated Title");
-        assertThat(updatedBookmark.url()).isEqualTo("https://www.sivalabs.in");
+        Bookmark updatedBookmark = bookmarkRepository.findById(savedBookmark.getId()).orElseThrow();
+        assertThat(updatedBookmark.getId()).isEqualTo(savedBookmark.getId());
+        assertThat(updatedBookmark.getTitle()).isEqualTo("My Updated Title");
+        assertThat(updatedBookmark.getUrl()).isEqualTo("https://www.sivalabs.in");
     }
 
     @Test
     void shouldDeleteBookmark() {
         Bookmark bookmark = new Bookmark(null, "My Title", "https://sivalabs.in", Instant.now());
-        Long id = bookmarkRepository.save(bookmark);
+        Bookmark savedBookmark = bookmarkRepository.save(bookmark);
 
-        bookmarkRepository.delete(id);
+        bookmarkRepository.deleteById(savedBookmark.getId());
     }
 }

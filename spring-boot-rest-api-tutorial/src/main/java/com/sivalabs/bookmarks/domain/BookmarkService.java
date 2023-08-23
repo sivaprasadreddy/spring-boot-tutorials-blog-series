@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -45,7 +45,7 @@ public class BookmarkService {
         Bookmark bookmark = new Bookmark();
         bookmark.setTitle(cmd.title());
         bookmark.setUrl(cmd.url());
-        bookmark.setCreatedAt(LocalDateTime.now());
+        bookmark.setCreatedAt(Instant.now());
         return BookmarkDTO.from(repo.save(bookmark));
     }
 
@@ -55,7 +55,8 @@ public class BookmarkService {
                 .orElseThrow(()-> BookmarkNotFoundException.of(cmd.id()));
         bookmark.setTitle(cmd.title());
         bookmark.setUrl(cmd.url());
-        bookmark.setUpdatedAt(LocalDateTime.now());
+        bookmark.setUpdatedAt(Instant.now());
+        repo.save(bookmark);
     }
 
     @Transactional

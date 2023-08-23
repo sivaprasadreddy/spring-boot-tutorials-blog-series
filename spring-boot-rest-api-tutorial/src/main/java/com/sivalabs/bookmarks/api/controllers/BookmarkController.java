@@ -8,6 +8,7 @@ import com.sivalabs.bookmarks.domain.BookmarkDTO;
 import com.sivalabs.bookmarks.domain.UpdateBookmarkCommand;
 import com.sivalabs.bookmarks.domain.PagedResult;
 import com.sivalabs.bookmarks.domain.BookmarkService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/bookmarks")
@@ -37,20 +41,23 @@ class BookmarkController {
     }
 
     @PostMapping
-    BookmarkDTO create(@RequestBody @Validated CreateBookmarkRequest request) {
+    ResponseEntity<BookmarkDTO> create(@RequestBody @Validated CreateBookmarkRequest request) {
         CreateBookmarkCommand cmd = new CreateBookmarkCommand(
                 request.title(),
                 request.url()
         );
-        return bookmarkService.create(cmd);
+        BookmarkDTO bookmark = bookmarkService.create(cmd);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/api/bookmarks/{id}")
+                .buildAndExpand(bookmark.id()).toUri();
+        return ResponseEntity.created(location).body(bookmark);
     }
 
     @PutMapping("/{id}")
     void update(@PathVariable(name = "id") Long id,
                 @RequestBody @Validated UpdateBookmarkRequest request) {
-        UpdateBookmarkCommand cmd = new UpdateBookmarkCommand(id,
-                request.title(),
-                request.url());
+        UpdateBookmarkCommand cmd = new UpdateBookmarkCommand(id, request.title(), request.url());
         bookmarkService.update(cmd);
     }
 

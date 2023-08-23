@@ -6,8 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "bookmarks")
@@ -19,20 +21,22 @@ class Bookmark {
     private String title;
     @Column(nullable = false)
     private String url;
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
+    private Instant createdAt;
+    @Column(name = "updated_at", insertable = false)
+    @LastModifiedDate
+    private Instant updatedAt;
 
     public Bookmark() {}
 
     public Bookmark(String title, String url) {
         this.title = title;
         this.url = url;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = Instant.now();
     }
 
-    public Bookmark(Long id, String title, String url, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Bookmark(Long id, String title, String url, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.title = title;
         this.url = url;
@@ -64,19 +68,19 @@ class Bookmark {
         this.url = url;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

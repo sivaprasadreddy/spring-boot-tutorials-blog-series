@@ -116,7 +116,7 @@ class BookmarkControllerTests {
                 .get("/api/bookmarks/{id}", bookmark.id())
                 .then()
                 .statusCode(200)
-                .body("id", equalTo(bookmark.id()))
+                .body("id", equalTo(bookmark.id().intValue()))
                 .body("title", equalTo("SivaLabs blog"))
                 .body("url", equalTo("https://sivalabs.in"))
                 .body("createdAt", notNullValue())

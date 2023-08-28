@@ -15,5 +15,6 @@
 		<module>spring-boot-jdbc-tutorial</module>
 		<module>spring-boot-flyway-tutorial</module>
 		<module>spring-boot-rest-api-tutorial</module>
+		<module>spring-boot-jdbcclient-tutorial</module>
     </modules>
 </project>

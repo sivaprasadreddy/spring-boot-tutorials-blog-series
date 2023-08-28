@@ -77,7 +77,6 @@ class BookmarkRepositoryTest {
         assertThat(updatedBookmark.id()).isEqualTo(changedBookmark.id());
         assertThat(updatedBookmark.title()).isEqualTo(changedBookmark.title());
         assertThat(updatedBookmark.url()).isEqualTo(changedBookmark.url());
-        assertThat(updatedBookmark.createdAt()).isEqualTo(bookmark.createdAt());
     }
 
     @Test

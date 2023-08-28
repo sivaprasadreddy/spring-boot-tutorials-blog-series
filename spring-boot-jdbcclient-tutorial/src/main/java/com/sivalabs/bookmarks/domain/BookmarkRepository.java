@@ -12,13 +12,13 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
-import static com.sivalabs.bookmarks.domain.JdbcBookmarkRepository.BookmarkRowMapper.INSTANCE;
+import static com.sivalabs.bookmarks.domain.BookmarkRepository.BookmarkRowMapper.INSTANCE;
 
 @Repository
-public class JdbcBookmarkRepository {
+public class BookmarkRepository {
     private final JdbcClient jdbcClient;
 
-    public JdbcBookmarkRepository(JdbcClient jdbcClient) {
+    public BookmarkRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 

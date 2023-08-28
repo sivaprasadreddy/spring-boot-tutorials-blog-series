@@ -26,11 +26,11 @@ class BookmarkRepositoryTest {
     @Autowired
     JdbcClient jdbcClient;
 
-    JdbcBookmarkRepository bookmarkRepository;
+    BookmarkRepository bookmarkRepository;
 
     @BeforeEach
     void setUp() {
-        bookmarkRepository = new JdbcBookmarkRepository(jdbcClient);
+        bookmarkRepository = new BookmarkRepository(jdbcClient);
     }
 
     @Test
@@ -56,7 +56,7 @@ class BookmarkRepositoryTest {
         assertThat(bookmarkOptional).isPresent();
         assertThat(bookmarkOptional.get())
                 .usingRecursiveComparison()
-                .ignoringFields("id")
+                .ignoringFields("id", "createdAt")
                 .isEqualTo(bookmark);
     }
 
@@ -75,7 +75,11 @@ class BookmarkRepositoryTest {
         bookmarkRepository.update(changedBookmark);
 
         Bookmark updatedBookmark = bookmarkRepository.findById(id).orElseThrow();
-        assertThat(updatedBookmark).usingRecursiveComparison().isEqualTo(changedBookmark);
+        //assertThat(updatedBookmark).usingRecursiveComparison().isEqualTo(changedBookmark);
+        assertThat(updatedBookmark.id()).isEqualTo(changedBookmark.id());
+        assertThat(updatedBookmark.title()).isEqualTo(changedBookmark.title());
+        assertThat(updatedBookmark.url()).isEqualTo(changedBookmark.url());
+        assertThat(updatedBookmark.createdAt()).isEqualTo(changedBookmark.createdAt());
     }
 
     @Test

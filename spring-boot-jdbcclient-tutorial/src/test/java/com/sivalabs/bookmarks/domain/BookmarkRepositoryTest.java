@@ -54,10 +54,9 @@ class BookmarkRepositoryTest {
 
         Optional<Bookmark> bookmarkOptional = bookmarkRepository.findById(id);
         assertThat(bookmarkOptional).isPresent();
-        assertThat(bookmarkOptional.get())
-                .usingRecursiveComparison()
-                .ignoringFields("id", "createdAt")
-                .isEqualTo(bookmark);
+        assertThat(bookmarkOptional.get().id()).isEqualTo(id);
+        assertThat(bookmarkOptional.get().title()).isEqualTo(bookmark.title());
+        assertThat(bookmarkOptional.get().url()).isEqualTo(bookmark.url());
     }
 
     @Test
@@ -68,18 +67,17 @@ class BookmarkRepositoryTest {
 
     @Test
     void shouldUpdateBookmark() {
-        Bookmark bookmark = new Bookmark(null, "My Title", "https://sivalabs.in", Instant.now());
+        Bookmark bookmark = new Bookmark(null, "My Title", "https://sivalabs.in", Instant.parse("2023-08-28T00:00:00.00Z"));
         Long id = bookmarkRepository.save(bookmark);
 
         Bookmark changedBookmark = new Bookmark(id, "My Updated Title", "https://www.sivalabs.in", bookmark.createdAt());
         bookmarkRepository.update(changedBookmark);
 
         Bookmark updatedBookmark = bookmarkRepository.findById(id).orElseThrow();
-        //assertThat(updatedBookmark).usingRecursiveComparison().isEqualTo(changedBookmark);
         assertThat(updatedBookmark.id()).isEqualTo(changedBookmark.id());
         assertThat(updatedBookmark.title()).isEqualTo(changedBookmark.title());
         assertThat(updatedBookmark.url()).isEqualTo(changedBookmark.url());
-        assertThat(updatedBookmark.createdAt()).isEqualTo(changedBookmark.createdAt());
+        assertThat(updatedBookmark.createdAt().toString()).isEqualTo("2023-08-28T00:00:00Z");
     }
 
     @Test

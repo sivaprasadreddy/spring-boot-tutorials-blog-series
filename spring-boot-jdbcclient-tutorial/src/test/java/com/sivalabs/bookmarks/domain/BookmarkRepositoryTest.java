@@ -67,7 +67,7 @@ class BookmarkRepositoryTest {
 
     @Test
     void shouldUpdateBookmark() {
-        Bookmark bookmark = new Bookmark(null, "My Title", "https://sivalabs.in", Instant.parse("2023-08-28T00:00:00.00Z"));
+        Bookmark bookmark = new Bookmark(null, "My Title", "https://sivalabs.in", Instant.now());
         Long id = bookmarkRepository.save(bookmark);
 
         Bookmark changedBookmark = new Bookmark(id, "My Updated Title", "https://www.sivalabs.in", bookmark.createdAt());
@@ -77,7 +77,7 @@ class BookmarkRepositoryTest {
         assertThat(updatedBookmark.id()).isEqualTo(changedBookmark.id());
         assertThat(updatedBookmark.title()).isEqualTo(changedBookmark.title());
         assertThat(updatedBookmark.url()).isEqualTo(changedBookmark.url());
-        assertThat(updatedBookmark.createdAt().toString()).isEqualTo("2023-08-28T00:00:00Z");
+        assertThat(updatedBookmark.createdAt()).isEqualTo(bookmark.createdAt());
     }
 
     @Test
